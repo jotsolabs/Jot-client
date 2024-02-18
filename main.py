@@ -7,23 +7,7 @@ import win32security
 import time
 from windows_tools.installed_software import get_installed_software
 
-
 SERVER_URL = "http://127.0.0.1:8000"
-
-def register_startup():
-    import winreg as reg
-    key = reg.HKEY_CURRENT_USER
-    subkey = r"Software\Microsoft\Windows\CurrentVersion\Run"
-    app_name = "Jot-client v0.0.1 DEBUG"
-
-    try:
-        reg.OpenKey(key, subkey, 0, reg.KEY_ALL_ACCESS)
-    except FileNotFoundError:
-        reg.CreateKey(key, subkey)
-
-    with reg.OpenKey(key, subkey, 0, reg.KEY_ALL_ACCESS) as reg_key:
-        current_path = os.path.abspath(__file__)
-        reg.SetValueEx(reg_key, app_name, 0, reg.REG_SZ, current_path)
 
 def get_user_sid():
     user_name = getpass.getuser()
@@ -59,9 +43,6 @@ def send_report(debug=False):
         print("Skipping sending report in debug mode.")
 
 def main(debug=False):
-    if not debug:
-        register_startup()
-
     while True:
         send_report(debug)
         time.sleep(3600)  # repeat every hour
